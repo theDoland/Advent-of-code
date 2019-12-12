@@ -1,10 +1,7 @@
 OPCODE_LENGTH = 4
+TARGET_NUM = 19690720
 
 def handleIntcode(intcodeList, index):
-    if intcodeList[index] == 99:
-        print(f'Terminating program, value at position 0 is: {intcodeList[0]}')
-        exit()
-
     in_pos_1 = intcodeList[index + 1]
     in_pos_2 = intcodeList[index + 2]
     output_pos = intcodeList[index + 3]
@@ -24,10 +21,22 @@ def multiplicationOpcode(intcodeList, in_pos_1, in_pos_2, output_pos):
 
 def main():
     intcodeFile = open("input.txt", "r")
-    intcodeList = list(map(int, intcodeFile.readline().split(",")))
+    originalIntcodeList = list(map(int, intcodeFile.readline().split(",")))
 
-    for index in range(0, len(intcodeList), OPCODE_LENGTH):
-        handleIntcode(intcodeList, index)
+    for x in range(0, 100):
+        for y in range(0, 100):
+            intcodeList = originalIntcodeList[:]
+            intcodeList[1] = x
+            intcodeList[2] = y
+
+            for index in range(0, len(intcodeList), OPCODE_LENGTH):
+                if intcodeList[index] == 99:
+                    break
+                handleIntcode(intcodeList, index)
+            
+            if intcodeList[0] == TARGET_NUM:
+                print(f'Noun is: {x}, Verb is: {y}, \n Value of 100 * {x} + {y} is: {100 * x + y}')
+                exit()
 
 if __name__ == "__main__":
     main()
